@@ -350,60 +350,86 @@
         <!-- FOOT INERTIAL -->
         <!-- This link is symmetrical left or right -->
             <inertial>
-                <origin xyz="0 0 0.00035767" rpy="0 0 0"/>
+                <origin xyz="0 0 -0.000035767" rpy="0 0 0"/>
                 <xacro:if value="${has_passive_ankle}">
-                    <mass value="0.00010"/>
+                    <mass value="0.001"/>
+                    <inertia
+                        ixx="0.0000034"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="0.0000034"
+                        iyz="0.0"
+                        izz="0.0000016"/>
                 </xacro:if>
                 <xacro:unless value="${has_passive_ankle}">
                     <mass value="0.0"/>
+                    <inertia ixx="0.00000057"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="0.00000084"
+                        iyz="0.0"
+                        izz="0.00000053"/>
                 </xacro:unless>
-                <inertia ixx="0.00000057"
-                    ixy="0.0"
-                    ixz="0.0"
-                    iyy="0.00000084"
-                    iyz="0.0"
-                    izz="0.00000053"/>
+
             </inertial>
             <!-- FOOT VISUAL -->
-            <visual>
-                <xacro:if value="${has_passive_ankle}">
-                    <origin xyz="0 0 -0.01" rpy="0 2.35 0."/>
-                </xacro:if>
-                <xacro:unless value="${has_passive_ankle}">
+            <xacro:if value="${has_passive_ankle}">
+              <visual>
+                  <xacro:unless value="${is_right}">
+                      <origin xyz="0 0.001 -0.000035767" rpy="0 ${(2.35 - 1.57)} 0"/>
+                  </xacro:unless>
+                  <xacro:if value="${is_right}">
+                      <origin xyz="0 -0.001 -0.000035767" rpy="0 ${(2.35 - 1.57)} 0."/>
+                  </xacro:if>
+                  <geometry>
+                      <mesh filename="package://robot_properties_bolt/meshes/${mesh_ext}/bolt_ankle.${mesh_ext}" scale="0.1 0.1 0.1"/>
+                  </geometry>
+                  <material name="${color_name}">
+                      <color rgba="${color} ${opacity}"/>
+                  </material>
+              </visual>
+            </xacro:if>
+            <xacro:unless value="${has_passive_ankle}">
+                <visual>
                     <origin xyz="0 0 0.0" rpy="0 0. 0."/>
-                </xacro:unless>
-                <geometry>
-                    <xacro:if value="${has_passive_ankle}">
-                        <cylinder length="0.06" radius="0.0085"/>
-                    </xacro:if>
-                    <xacro:unless value="${has_passive_ankle}">
-                        <mesh filename="package://robot_properties_bolt/meshes/${mesh_ext}/bolt_foot.${mesh_ext}" scale="1.30 1.35 1.30"/>
-                    </xacro:unless>
-                </geometry>
-                <material name="${color_name}">
-                    <color rgba="${color} ${opacity}"/>
-                </material>
-            </visual>
+                    <geometry>
+                        <sphere radius="0.025"/>
+                        <!-- <mesh filename="package://robot_properties_bolt/meshes/${mesh_ext}/bolt_foot.${mesh_ext}" scale="1.30 1.35 1.30"/> -->
+                    </geometry>
+                    <material name="${color_name}">
+                        <color rgba="${color} ${opacity}"/>
+                    </material>
+                </visual>
+            </xacro:unless>
             <!-- FOOT COLLISION -->
-            <collision>
-                <xacro:if value="${has_passive_ankle}">
-                    <origin xyz="0 0 -0.01" rpy="0 2.35 0."/>
-                </xacro:if>
-                <xacro:unless value="${has_passive_ankle}">
+            <xacro:if value="${has_passive_ankle}">
+              <collision>
+                  <xacro:unless value="${is_right}">
+                      <origin xyz="0 0.001 -0.000035767" rpy="0 ${(2.35 - 1.57)} 0"/>
+                  </xacro:unless>
+                  <xacro:if value="${is_right}">
+                      <origin xyz="0 -0.001 -0.000035767" rpy="0 ${(2.35 - 1.57)} 0."/>
+                  </xacro:if>
+                  <geometry>
+                      <mesh filename="package://robot_properties_bolt/meshes/${mesh_ext}/bolt_ankle.${mesh_ext}" scale="0.1 0.1 0.1"/>
+                  </geometry>
+                  <material name="${color_name}">
+                      <color rgba="${color} ${opacity}"/>
+                  </material>
+              </collision>
+            </xacro:if>
+            <xacro:unless value="${has_passive_ankle}">
+                <collision>
                     <origin xyz="0 0 0.0" rpy="0 0. 0."/>
-                </xacro:unless>
-                <geometry>
-                    <xacro:if value="${has_passive_ankle}">
-                        <cylinder length="0.06" radius="0.0085"/>
-                    </xacro:if>
-                    <xacro:unless value="${has_passive_ankle}">
-                        <mesh filename="package://robot_properties_bolt/meshes/${mesh_ext}/bolt_foot.${mesh_ext}" scale="1.30 1.35 1.30"/>
-                    </xacro:unless>
-                </geometry>
-                <material name="${color_name}">
-                    <color rgba="${color} ${opacity}"/>
-                </material>
-            </collision>
+                    <geometry>
+                        <sphere radius="0.025"/>
+                        <!-- <mesh filename="package://robot_properties_bolt/meshes/${mesh_ext}/bolt_foot.${mesh_ext}" scale="1.30 1.35 1.30"/> -->
+                    </geometry>
+                    <material name="${color_name}">
+                        <color rgba="${color} ${opacity}"/>
+                    </material>
+                </collision>
+            </xacro:unless>
             <!-- Bullet specific paramters -->
             <contact>
                 <lateral_friction value="4.0"/>

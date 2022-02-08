@@ -49,16 +49,21 @@ def find_paths(robot_name, robot_family="bolt"):
 
 def build_xacro_files(resources_dir):
     """ Look for the xacro files and build them in the build folder. """
-
+    import pathlib
+    print("Searching XACRO files in: %s" % resources_dir)
     build_folder = resources_dir
     xacro_files = []
+    print("XACRO FILES:")
     for (root, _, files) in walk(str(Path(resources_dir) / "xacro")):
         for afile in files:
+            print("- %s" % afile)
             if afile.endswith(".urdf.xacro"):
                 xacro_files.append(str(Path(root) / afile))
+                print("- %s" % afile)
 
     if not Path(build_folder).exists():
         mkdir(build_folder)
+        print("Build folder [%s]" % build_folder)
 
     for xacro_file in xacro_files:
         for xacro_file in xacro_files:
@@ -67,6 +72,7 @@ def build_xacro_files(resources_dir):
                 Path(build_folder) / Path(xacro_file).stem
             )
             build_single_xacro_file(xacro_file, generated_urdf_path)
+            print("Build: %s" % generated_urdf_path)
 
 
 def build_single_xacro_file(input_path, output_path):
@@ -88,6 +94,7 @@ def build_single_xacro_file(input_path, output_path):
         error(msg)
         sys.exit(2)  # gracefully exit with error condition
 
+    # Hi i was not here before :)
     # write output
     out.write(doc.toprettyxml(indent="  ", **encoding))
     # only close output file, but not stdout
